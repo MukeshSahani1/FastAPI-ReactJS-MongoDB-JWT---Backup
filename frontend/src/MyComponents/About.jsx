@@ -4,9 +4,10 @@ export const About = () => {
     return (
         <div className="container">
             <div>
-                <h1>This is about page</h1>
+                <h1>About Shipment Tracking and User Management</h1>
                 <br />
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni nisi fugiat sequi possimus nam ipsam vitae laudantium similique, cumque quo, rerum sapiente commodi minus corrupti. Placeat dolorem corrupti debitis officia.</p>
+                <p> Shipment tracking plays an essential role in the shipping and logistics industry, providing stakeholders with vital information relating to their merchandise while in transport. 
+                    It offers visibility to shipping companies to accurately monitor the progress and location of their shipments in real-time. If issues arise, shipping companies can take proactive measures to address and work around potential delays.</p>
             </div>
         </div>
     )
