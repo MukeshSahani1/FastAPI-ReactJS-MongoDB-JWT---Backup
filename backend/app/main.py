@@ -3,9 +3,12 @@ from .config.db import fetch_one_user , create_new_user , fetch_all_users , save
 from passlib.context import CryptContext
 from .models.user import UserSchema , UserLoginSchema
 from fastapi.middleware.cors import CORSMiddleware
+from .auth.fa import send_otp
 
 from .auth.auth_handler import signJWT
 from .auth.auth_bearer import JWTBearer
+
+from random import random, randrange
 
 app = FastAPI() 
 
@@ -74,9 +77,17 @@ async def login(user: UserLoginSchema = Body(...)):
 
     # Generate JWT token
     USER_JWT_TOKEN = signJWT(user.email)
+    # Generate a random OPT
 
+    #otp = randrange(1000, 9999)
+
+    # Store the OTP in the session
+    #session['otp'] = otp
+
+    #send_otp(user.email, otp)
     # return signJWT(user.email)
     return {"message": "User logged in successfully", "token": USER_JWT_TOKEN, "status_code": 200}
+
 
 
 # Protected Route

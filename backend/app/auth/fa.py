@@ -1,7 +1,8 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
+from ..main import *
+from random import random
 # Email configuration
 
 def send_otp(user_email, otp):
@@ -10,9 +11,9 @@ def send_otp(user_email, otp):
     smtp_username = 'mukeshvmos@gmail.com'  # Your SMTP username
     smtp_password = 'TVA1hGCQxnjkrKX0'  # Your SMTP password
 
-    sender_email = 'mukeshvmos@gmail.com'
+    sender_email = 'admin@jrets.com'
     recipient_email = user_email
-    subject = 'Test Email Subject'
+    subject = 'Verify OTP for Login'
     message = f'Your otp is: {otp}'
 
     # Create a MIMEText object to represent the email message
@@ -40,4 +41,6 @@ def send_otp(user_email, otp):
     finally:
         server.quit()
 
-send_otp('mukesh.sahani22@gmail.com', 1234)
+# Generate a random OPT
+
+

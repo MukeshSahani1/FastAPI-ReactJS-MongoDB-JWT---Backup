@@ -8,18 +8,21 @@ import { SignIn } from './MyComponents/SignIn';
 import { SignUp } from './MyComponents/SignUp';
 import { Welcome } from './MyComponents/Welcome';
 
+
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { TokenProvider, TokenContext } from './context/context';
 
+
+
 function App() {
 
   const { state } = useContext(TokenContext);
   const { isLoggedIn } = state; // Access the token value from the state object
-
-
+ 
   return (
+    
     <Router>
       {isLoggedIn ? <LoggedInHeader /> : <Header />}
       <Routes>
@@ -31,6 +34,7 @@ function App() {
       </Routes>
       <Footer />
     </Router>
+
   );
 }
 
