@@ -69,9 +69,7 @@ function onChange(value) {
     setIsCaptchaSuccess(true)
     
 }
-    
 
-    
     return (
 
         <div className="container my-4">
