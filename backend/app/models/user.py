@@ -32,3 +32,15 @@ class UserLoginSchema(BaseModel):
                 "password": "any"
             }
         }
+
+class UserRequestSchema(BaseModel):
+    email: EmailStr = Field(...)
+    
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "email": "joe@xyz.com",
+                
+            }
+        }

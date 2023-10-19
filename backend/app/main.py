@@ -1,13 +1,13 @@
 from fastapi import Body, FastAPI , HTTPException , Depends , status
 from .config.db import fetch_one_user , create_new_user , fetch_all_users , save_blacklisted_token
 from passlib.context import CryptContext
-from .models.user import UserSchema , UserLoginSchema
+from .models.user import UserSchema , UserLoginSchema, UserRequestSchema
 from fastapi.middleware.cors import CORSMiddleware
 from .auth.fa import send_otp
 
 from .auth.auth_handler import signJWT
 from .auth.auth_bearer import JWTBearer
-
+from .auth.fa import send_otp
 from random import random, randrange
 
 app = FastAPI() 
@@ -77,16 +77,25 @@ async def login(user: UserLoginSchema = Body(...)):
 
     # Generate JWT token
     USER_JWT_TOKEN = signJWT(user.email)
-    # Generate a random OPT
-
-    #otp = randrange(1000, 9999)
-
-    # Store the OTP in the session
-    #session['otp'] = otp
-
-    #send_otp(user.email, otp)
-    # return signJWT(user.email)
+    
+    # Return signJWT(user.email)
     return {"message": "User logged in successfully", "token": USER_JWT_TOKEN, "status_code": 200}
+
+
+
+# User Request Password API endpoint
+@app.post("/user/requestpassword", tags=["user-request-password"])
+async def request(user: UserRequestSchema = Body(...)):
+# Retrieve the user from the database using the email
+    existing_user = await fetch_one_user(user.email)
+    if not existing_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    send_otp(user.email, 1234)
+    # Generate JWT token 
+    USER_JWT_TOKEN = signJWT(user.email)
+    
+    return {"message": f"An OTP has been sent to {user.email}.", "token": USER_JWT_TOKEN, "status_code": 200}
 
 
 

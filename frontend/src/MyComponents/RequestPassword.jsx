@@ -2,9 +2,8 @@ import React, { useCallback, useContext, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { TokenContext } from '../context/context';
-import ReCAPTCHA from 'react-google-recaptcha';
 
-export const SignIn = () => {
+export const RequestPassword = () => {
 
     const { dispatch } = useContext(TokenContext);
     const navigate = useNavigate();
@@ -22,14 +21,22 @@ export const SignIn = () => {
         }));
     }, []);
 
+    //OTP Sent on Button 
+
+    const [buttonText, setButtonText] = useState('Send OTP');
+
+    function handleClick() {
+    setButtonText('OTP Sent Success');
+    }
+
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
-        if (!formData.email || !formData.password) {
-            alert("Email or Password cannot be blank..!!")
+        if (!formData.email) {
+            alert("Email cannot be blank..!!")
         }
         else {
 
-            axios.post('http://localhost:8000/user/sign-in', formData)
+            axios.post('http://localhost:8000/user/requestpassword', formData)
                 .then((res) => {
 
                     const statusCode = res.data.status_code; // Check the status code from the backend
@@ -61,60 +68,27 @@ export const SignIn = () => {
         }
     }, [formData, dispatch, navigate]);
 
-
-// Recaptcha Logic 
-const [isCaptchaSuccessful, setIsCaptchaSuccess] = React.useState(false)
-      
-function onChange(value) {
-    setIsCaptchaSuccess(true)
-    
-}
-
     return (
 
         <div className="container my-4">
             <div className="row justify-content-center">
                 <div className="col-sm-6 col-md-4">
-                    <h1 className="text-center mb-4">User Login</h1>
+                    <h1 className="text-center mb-4">Reset Password</h1>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">Email address</label>
                             <input type="email" className="form-control" id="email" name='email' value={formData.email} onChange={handleChange} placeholder="Enter your email" required />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="password" className="form-label">Password</label>
-                            <input type="password" className="form-control" id="password" name='password' value={formData.password} onChange={handleChange} placeholder="Enter your password" minLength={8} required />
                             
                         </div>
-                        
-                        <ReCAPTCHA sitekey="6LelLZMoAAAAAFjD1m28PIYPwKAw_7gguIo9lZkK"
-                            onChange={onChange} />
                         <p></p>
-                        <button disabled={!isCaptchaSuccessful} type="submit" className="btn btn-primary btn-full-width">Login</button>
-                        
-                        <p></p>
-                        
+                    
+                    <div>
+                        <button type="submit" className="btn btn-primary btn-full-width" onClick={handleClick}>{buttonText}</button>
+                    </div>
+ 
 
                     </form>
 
-                    
-                    <NavLink
-                        className="nav-link"
-                        activeclassname="active"
-                        to="/user/requestpassword"
-                    ><button type="submit" className="btn btn-primary btn-full-width">Forget Password</button>
-                    </NavLink>
-                    
-
-                    <p className="text-center mt-4">Don't have an account?
-                    
-                        <NavLink
-                            className="nav-link"
-                            activeclassname="active"
-                            to="/user/sign-up"
-                        >Sign up
-                        </NavLink>
-                    </p>
                 </div>
             </div>
         </div>

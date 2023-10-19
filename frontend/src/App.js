@@ -7,6 +7,7 @@ import { Footer } from './MyComponents/Footer';
 import { SignIn } from './MyComponents/SignIn';
 import { SignUp } from './MyComponents/SignUp';
 import { Welcome } from './MyComponents/Welcome';
+import { RequestPassword } from './MyComponents/RequestPassword'
 
 
 import React, { useContext } from 'react';
@@ -31,6 +32,7 @@ function App() {
         <Route path="/user/sign-in" element={<SignIn />}  />
         <Route path="/user/sign-up" element={<SignUp />} />
         <Route path="/user/home" element={<Welcome />} />
+        <Route path="/user/requestpassword" element={<RequestPassword />} />
       </Routes>
       <Footer />
     </Router>
