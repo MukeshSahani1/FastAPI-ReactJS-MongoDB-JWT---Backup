@@ -1,60 +1,38 @@
-import pymongo
-from datetime import datetime
+from pydantic import BaseModel , Field , EmailStr
 
-# Establish a connection to MongoDB
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-db = client["scm"]
+# Shipment Mode
 
-# Define the collections for shipments and products
-shipments = db["shipments"]
-products = db["products"]
+# User model
+class ShipmentSchema(BaseModel):
+    shipment_no : str = Field(...)
+    container_no : str = Field(...)
+    route_details : str = Field(...)
+    goods_type : str = Field(...)
+    device : str = Field(...)
+    expected_delivery_date : str = Field(...)
+    po_number : str = Field(...)
+    delivery_number : str = Field(...)
+    ndc_number : str = Field(...)
+    batch_id : str = Field(...)
+    serial_number_goods : str = Field(...)
+    shipment_description : str = Field(...)
 
-def create_product(name, quantity):
-    product = {
-        "name": name,
-        "quantity": quantity,
-    }
-    return products.insert_one(product)
 
-def create_shipment(product_id, quantity):
-    product = products.find_one({"_id": product_id})
-    if product:
-        if product["quantity"] >= quantity:
-            shipment = {
-                "product_id": product_id,
-                "quantity": quantity,
-                "timestamp": datetime.now(),
+    class Config:
+        schema_extra = {
+            "example": {
+                "shipment_no": "1234567890",
+                "container_no": "123456",
+                "route_details": "Mumbai",
+                "goods_type": "Electronics",
+                "device": "14567890",
+                "expected_delivery_date": "03-03-2023",
+                "po_number": "PO123456",
+                "delivery_number": "09890",
+                "ndc_number": "123456",
+                "batch_id": "100",
+                "serial_number_goods": "456321",
+                "shipment_description": "Electronic goods Deliver to Mumbai"
+            
             }
-            shipments.insert_one(shipment)
-            products.update_one({"_id": product_id}, {"$inc": {"quantity": -quantity}})
-            print("Shipment created successfully.")
-        else:
-            print("Error: Insufficient quantity in inventory.")
-    else:
-        print("Error: Product not found in inventory.")
-
-def list_inventory():
-    for product in products.find():
-        print(f"Product ID: {product['_id']}, Name: {product['name']}, Quantity: {product['quantity']}")
-
-def list_shipments():
-    for shipment in shipments.find():
-        product = products.find_one({"_id": shipment["product_id"]})
-        print(f"Shipment ID: {shipment['_id']}, Product: {product['name']}, Quantity: {shipment['quantity']}, Timestamp: {shipment['timestamp']}")
-
-# Example usage:
-if __name__ == "__main__":
-    # Create some initial products
-    create_product("Widget A", 100)
-    create_product("Widget B", 50)
-
-    # List the inventory
-    print("Inventory:")
-    list_inventory()
-
-    # Create a shipment
-    create_shipment(products.find_one({"name": "Widget A"})["_id"], 20)
-
-    # List the shipments
-    print("\nShipments:")
-    list_shipments()
+        }

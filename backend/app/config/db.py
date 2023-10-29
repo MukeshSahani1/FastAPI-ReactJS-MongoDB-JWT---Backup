@@ -14,8 +14,27 @@ MONGO_PASSWORD = "password"
 mongo_client = AsyncIOMotorClient("mongodb://root:password@localhost:27017/?authMechanism=DEFAULT")
 db = mongo_client[MONGO_DB]
 user_details_collection = db["users"]
+shipment_details_collection = db["shipment"]
 blacklisted_tokens_collection = db["blacklisted_tokens"]
 
+
+
+async def create_new_shipment(shipment_data):
+    document = shipment_data
+    result = await shipment_details_collection.insert_one(shipment_data)
+    return document
+
+async def fetch_all_shipment():
+    cursor = shipment_details_collection.find()
+    documents = []
+    async for document in cursor:
+        document['_id'] = str(document['_id'])
+        documents.append(document)
+    return documents
+
+async def fetch_one_shipment(shipment_no):
+    document = await shipment_details_collection.find_one({"shipment_no":shipment_no})
+    return document
 
 async def fetch_one_user(email):
     document = await user_details_collection.find_one({"email":email})

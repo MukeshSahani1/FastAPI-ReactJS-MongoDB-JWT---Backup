@@ -1,7 +1,9 @@
 from fastapi import Body, FastAPI , HTTPException , Depends , status
 from .config.db import fetch_one_user , create_new_user , fetch_all_users , save_blacklisted_token
+from .config.db import fetch_one_shipment, fetch_all_shipment, create_new_shipment
 from passlib.context import CryptContext
 from .models.user import UserSchema , UserLoginSchema, UserRequestSchema
+from .models.shipment import ShipmentSchema
 from fastapi.middleware.cors import CORSMiddleware
 from .auth.fa import send_otp
 
@@ -33,6 +35,41 @@ async def index():
     return {"message": "Hello User"}
 
 
+# Shipment Data fill
+@app.post("/shipment/register", tags=["shipment-register"], status_code=status.HTTP_201_CREATED)
+async def register(shipment: ShipmentSchema = Body(...)):
+    # Check if shipment Number is registered
+    existing_shippingNO = await fetch_one_shipment(shipment.shipment_no)
+    if existing_shippingNO:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Shipment No. already Present")
+
+    # Create a new shipment data
+    shipment_data = {
+        "shipment_no": shipment.shipment_no,
+        "container_no": shipment.container_no,
+        "route_details": shipment.route_details,
+        "goods_type": shipment.goods_type,
+        "device": shipment.device,
+        "expected_delivery_date": shipment.expected_delivery_date,
+        "po_number": shipment.po_number,
+        "delivery_number": shipment.delivery_number,
+        "ndc_number": shipment.ndc_number,
+        "batch_id": shipment.batch_id,
+        "serial_number_goods": shipment.serial_number_goods,
+        "shipment_description": shipment.shipment_description
+    }
+
+    result = await create_new_shipment(shipment_data)
+
+    if result:
+        # Generate JWT token
+        USER_JWT_TOKEN = signJWT(shipment.shipment_no)
+        return {"message": "Shipment created successfully", "token": USER_JWT_TOKEN,}
+    else:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
+
+
+
 # User signup API endpoint
 @app.post("/user/sign-up", tags=["user-sign-up"], status_code=status.HTTP_201_CREATED)
 async def signup(user: UserSchema = Body(...)):
@@ -47,10 +84,7 @@ async def signup(user: UserSchema = Body(...)):
     user_data = {
         "Full_name": user.fullname,
         "email": user.email,
-        "password": hashed_password,
-        "dob": user.dob,
-        "gender": user.gender,
-        "country": user.country
+        "password": hashed_password
     }
 
     result = await create_new_user(user_data) # Insert the user document into the collection
@@ -96,6 +130,7 @@ async def request(user: UserRequestSchema = Body(...)):
     USER_JWT_TOKEN = signJWT(user.email)
     
     return {"message": f"An OTP has been sent to {user.email}.", "token": USER_JWT_TOKEN, "status_code": 200}
+
 
 
 
