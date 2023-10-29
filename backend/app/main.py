@@ -82,9 +82,10 @@ async def signup(user: UserSchema = Body(...)):
 
     # Create a new user document
     user_data = {
-        "Full_name": user.fullname,
+        "name": user.name,
         "email": user.email,
-        "password": hashed_password
+        "password": hashed_password,
+        "confirmpassword": hashed_password,
     }
 
     result = await create_new_user(user_data) # Insert the user document into the collection

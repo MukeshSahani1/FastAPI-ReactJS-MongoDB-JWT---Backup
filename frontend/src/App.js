@@ -1,45 +1,30 @@
-import './App.css';
-import { Home } from './MyComponents/Home';
-import { Header } from './MyComponents/Header';
-import { LoggedInHeader } from './MyComponents/LoggedInHeader';
-import { About } from './MyComponents/About';
-import { Footer } from './MyComponents/Footer';
-import { SignIn } from './MyComponents/SignIn';
-import { SignUp } from './MyComponents/SignUp';
-import { Welcome } from './MyComponents/Welcome';
-import { RequestPassword } from './MyComponents/RequestPassword'
-
-
+import './App.css'
+import Login from './components/Login/Login';
+import Home from './components/Dashboard/Home';
 import React, { useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import { BrowserRouter as Router, Route,Routes,Navigate} from 'react-router-dom';
 import { TokenProvider, TokenContext } from './context/context';
-
-
-
 function App() {
-
   const { state } = useContext(TokenContext);
-  const { isLoggedIn } = state; // Access the token value from the state object
- 
+  const { isLoggedIn } = state;
+  console.log(isLoggedIn);
   return (
     
-    <Router>
-      {isLoggedIn ? <LoggedInHeader /> : <Header />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/user/sign-in" element={<SignIn />}  />
-        <Route path="/user/sign-up" element={<SignUp />} />
-        <Route path="/user/home" element={<Welcome />} />
-        <Route path="/user/requestpassword" element={<RequestPassword />} />
-      </Routes>
-      <Footer />
+      // <Router>
+      //   {isLoggedIn?<Home/>:<Login/>}
+      //   <Routes path='/' element={isLoggedIn?<Home/>:<Login/>}/>
+      //   {/* <Routes exact path='/home' element={<Home/>}/> */}
+      // </Router>
+      <Router>
+        <Routes>
+          <Route
+            exact path=""
+            element={isLoggedIn ? <Home /> : <Login />}
+          />
+        </Routes>
     </Router>
-
   );
 }
-
 function AppWrapper() {
   return (
     <TokenProvider>
@@ -47,5 +32,4 @@ function AppWrapper() {
     </TokenProvider>
   );
 }
-
 export default AppWrapper;
