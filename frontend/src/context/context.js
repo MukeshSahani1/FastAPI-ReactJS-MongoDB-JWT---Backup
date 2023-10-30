@@ -1,12 +1,12 @@
 // context.js
-import React, { createContext, useReducer } from 'react';
-import reducer from './reducer';
+import React, { createContext, useReducer } from "react";
+import reducer from "./reducer";
 
 export const TokenContext = createContext();
 
 export const TokenProvider = ({ children }) => {
   const initialState = {
-    token: '', // initial token value
+    token: "", // initial token value
     isLoggedIn: false, // initial login state
   };
 
@@ -18,4 +18,3 @@ export const TokenProvider = ({ children }) => {
     </TokenContext.Provider>
   );
 };
-

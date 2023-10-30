@@ -4,19 +4,18 @@ from pydantic import BaseModel , Field , EmailStr
 
 # User model
 class ShipmentSchema(BaseModel):
-    shipment_no : str = Field(...)
-    container_no : str = Field(...)
-    route_details : str = Field(...)
-    goods_type : str = Field(...)
-    device : str = Field(...)
-    expected_delivery_date : str = Field(...)
-    po_number : str = Field(...)
-    delivery_number : str = Field(...)
-    ndc_number : str = Field(...)
-    batch_id : str = Field(...)
-    serial_number_goods : str = Field(...)
-    shipment_description : str = Field(...)
-
+    shipment_no : str = Field(...,)
+    container_no : str = Field(...,)
+    route_details : str = Field(...,)
+    goods_type : str = Field(...,)
+    device : str = Field(...,)
+    expected_delivery_date : str = Field(...,)
+    po_number : str = Field(...,)
+    delivery_number : str = Field(...,)
+    ndc_number : str = Field(...,)
+    batch_id : str = Field(...,)
+    serial_number_goods : str = Field(...,)
+    shipment_description : str = Field(...,)
 
     class Config:
         schema_extra = {
